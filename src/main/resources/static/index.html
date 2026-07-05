@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client test</title>
+
+</head>
+<body>
+    <script type="importmap">
+  {
+    "imports": {
+      "@stomp/stompjs": "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js"
+    }
+  }
+</script>
+<script
+  async
+  src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js"
+  crossorigin="anonymous">
+</script>
+
+
+
+
+
+<div class="status">
+    <p id="status">  STATUS: </p>
+    </div>
+    <div class="form">
+    <input id="form" type="text">
+    <button id="buttonConnect"> CONNECT </button>
+    <button id="buttonSend"> SEND </button>
+    <p id="logs"></p>
+    </div>
+
+    <script type="module">
+    import { Client } from '@stomp/stompjs';
+
+    let status = document.getElementById("status");
+    const stompClient = new Client({
+          brokerURL: 'ws://localhost:8080/ws-entrance'
+
+          
+        });
+
+        stompClient.onConnect = function() {
+          status.innerHTML = "STATUS: CONNECTED";
+        };
+
+      const buttonC = document.querySelector('#buttonConnect');
+      buttonC.addEventListener('click', () => {
+        status.innerHTML = "STATUS: CONNECTING";
+
+
+
+        stompClient.activate();
+      });
+
+      const buttonS = document.querySelector("#buttonSend");
+      buttonS.addEventListener('click', () => {
+        status.innerHTML = "SEND";
+        stompClient.publish({
+          destination: "/app/test-message",
+          body: document.getElementById("form").value,
+          skipContentLengthHeader: true,
+        });
+
+
+      });
+
+    
+
+    </script>
+
+    </body>
+</html>
